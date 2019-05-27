@@ -1,8 +1,10 @@
 package com.homework.mateakademy.controller;
 
+
 import com.homework.mateakademy.domain.Role;
 import com.homework.mateakademy.domain.User;
 import com.homework.mateakademy.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,13 +19,14 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/user")
 @PreAuthorize("hasAuthority('ADMIN')")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
-    @Autowired
-    private UserRepository userRepo;
+
+    private final UserRepository userRepository;
 
     @GetMapping
     public String userList(Model model) {
-        model.addAttribute("users", userRepo.findAll());
+        model.addAttribute("users", userRepository.findAll());
 
         return "userList";
     }
@@ -56,7 +59,7 @@ public class UserController {
             }
         }
 
-        userRepo.save(user);
+        userRepository.save(user);
 
         return "redirect:/user";
     }

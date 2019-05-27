@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MyTweater</title>
+    <title>MateTweater</title>
 </head>
 <body>
 <#nested>
