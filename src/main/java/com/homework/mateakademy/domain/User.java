@@ -1,38 +1,48 @@
 package com.homework.mateakademy.domain;
 
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.ElementCollection;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Enumerated;
+import javax.persistence.CollectionTable;
+
+
 import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name = "usr")
+@Table(name = "users")
+@Getter
+@Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column ( name ="username", nullable = false)
     private String username;
+    @Column ( name ="password", nullable = false)
     private String password;
+    @Column ( name ="status", nullable = false)
     private boolean active;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
+    @Column ( name ="role", nullable = false)
     private Set<Role> roles;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -54,36 +64,8 @@ public class User implements UserDetails {
         return isActive();
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 }

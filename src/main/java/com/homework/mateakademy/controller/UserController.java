@@ -3,7 +3,7 @@ package com.homework.mateakademy.controller;
 
 import com.homework.mateakademy.domain.Role;
 import com.homework.mateakademy.domain.User;
-import com.homework.mateakademy.repositories.UserRepository;
+import com.homework.mateakademy.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,16 +17,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping("/user")
 @PreAuthorize("hasAuthority('ADMIN')")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping
     public String userList(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.getAllUsers());
 
         return "userList";
     }
@@ -59,7 +60,7 @@ public class UserController {
             }
         }
 
-        userRepository.save(user);
+        userService.saveUser(user);
 
         return "redirect:/user";
     }

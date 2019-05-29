@@ -1,24 +1,16 @@
 package com.homework.mateakademy.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 @Entity
+@Table(name = "massage")
 public class Message {
     @Id
     @Column(name = "id")

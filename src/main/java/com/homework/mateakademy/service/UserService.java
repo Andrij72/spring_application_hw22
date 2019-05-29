@@ -1,22 +1,15 @@
 package com.homework.mateakademy.service;
 
-import com.homework.mateakademy.repositories.UserRepository;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.homework.mateakademy.domain.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
-public class UserService implements UserDetailsService {
+import java.util.List;
 
-    private final UserRepository userRepository;
+public interface UserService extends UserDetailsService {
+        List<User> getAllUsers();
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    User getByUsername(String username);
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
-    }
+    void saveUser(User user);
 }

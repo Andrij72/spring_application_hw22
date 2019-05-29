@@ -1,6 +1,6 @@
 package com.homework.mateakademy.config;
 
-import com.homework.mateakademy.service.UserService;
+import com.homework.mateakademy.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,8 +14,12 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private UserService userService;
+
+    private UserServiceImpl userServiceImpl;
+
+    public WebSecurityConfig(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -34,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService)
+        auth.userDetailsService(userServiceImpl)
                 .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 }

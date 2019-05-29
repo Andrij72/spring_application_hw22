@@ -3,6 +3,9 @@ package com.homework.mateakademy.controller;
 import com.homework.mateakademy.domain.Role;
 import com.homework.mateakademy.domain.User;
 import com.homework.mateakademy.repositories.UserRepository;
+import com.homework.mateakademy.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +15,10 @@ import java.util.Collections;
 import java.util.Map;
 
 @Controller
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RegistrationController {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserService userService;
 
     @GetMapping("/registration")
     public String registration() {
@@ -22,8 +26,8 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(User user, Map<String, Object> model) {
-        User userFromDb = userRepository.findByUsername(user.getUsername());
+    public String addUser(@NotNull User user, Map<String, Object> model) {
+        User userFromDb = userService.getByUsername(user.getUsername());
 
         if (userFromDb != null) {
             model.put("message", "User exists!");
@@ -32,7 +36,7 @@ public class RegistrationController {
 
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
-        userRepository.save(user);
+        userService.saveUser(user);
 
         return "redirect:/login";
     }

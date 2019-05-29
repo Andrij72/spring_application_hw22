@@ -2,7 +2,7 @@ package com.homework.mateakademy.controller;
 
 import com.homework.mateakademy.domain.Message;
 import com.homework.mateakademy.domain.User;
-import com.homework.mateakademy.repositories.MessageRepository;
+import com.homework.mateakademy.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MainController {
 
-    private final MessageRepository messageRepository;
+    private final MessageService messageService;
 
     @GetMapping("/")
     public String greeting(Map<String, Object> model) {
@@ -27,15 +28,10 @@ public class MainController {
 
     @GetMapping("/main")
     public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
-        Iterable<Message> messages = messageRepository.findAll();
 
-        if (filter != null && !filter.isEmpty()) {
-            messages = messageRepository.findByTag(filter);
-        } else {
-            messages = messageRepository.findAll();
-        }
+        List<Message> messsage = (filter != null && !filter.isEmpty())? messageService.getByTag(filter) : messageService.findAllMessage();
 
-        model.addAttribute("messages", messages);
+        model.addAttribute("messages", messsage);
         model.addAttribute("filter", filter);
 
         return "main";
@@ -46,9 +42,9 @@ public class MainController {
     ) {
         Message message = new Message(text, tag, user);
 
-        messageRepository.save(message);
+        messageService.saveMessage(message);
 
-        Iterable<Message> messages = messageRepository.findAll();
+        List<Message> messages = messageService.findAllMessage();
 
         model.put("messages", messages);
 
